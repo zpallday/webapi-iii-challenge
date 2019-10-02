@@ -9,7 +9,8 @@ server.get('/', (req, res) => {
 //custom middleware
 
 function logger(req, res, next) {
-console.log(`[${new DataCue().toISOString()}] ${req.method} to ${req.url}`)
+console.log(` ${req.method} to ${req.url}`)
+next();
 };
 
 module.exports = server;
