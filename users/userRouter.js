@@ -1,6 +1,7 @@
 const express = "express";
 const router = express.Router();
 const userDateBase = require("./userDb.js");
+const postDateBase = require("./posts/postsDb")
 router.use(express.jon());
 
 router.post("/", validatePost, (req, res) => {
@@ -42,7 +43,11 @@ router.get("/", (req, res) => {
 
 
 
-router.get("/:id", (req, res) => {});
+router.get("/:id", validateUserId, (req, res) => {
+    res.status(201).json(req.user)
+});
+
+
 
 router.get("/:id/posts", (req, res) => {});
 
