@@ -1,9 +1,18 @@
 const express = 'express';
-
 const router = express.Router();
+const userDateBase = require('./userDb.js');
+router.use(express.jon())
 
-router.post('/', (req, res) => {
 
+router.post('/', validatePost, (req, res) => {
+ const userObj = req.body;
+userDateBase.insert(userObj)
+.then(results => {
+    res.status(200).json(results)
+})
+.catch(error => {
+    res.status(500).json(error)
+})
 });
 
 router.post('/:id/posts', (req, res) => {
