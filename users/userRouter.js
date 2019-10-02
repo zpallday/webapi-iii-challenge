@@ -71,7 +71,7 @@ router.delete("/:id", validateUserId, (req, res) => {
 
 
 
-router.put("/:id", validateUserId, (req, res) => {
+router.put("/:id", validateUserId,ValidityUser, (req, res) => {
 userDateBase.update(req.user.id, req.body)
 .then(results => {
     res.status(200).json(results)
@@ -83,10 +83,43 @@ userDateBase.update(req.user.id, req.body)
 
 //custom middleware
 
-function validateUserId(req, res, next) {}
+function validateUserId(req, res, next) {
+    const userID = req.params.id;
 
-function validateUser(req, res, next) {}
+    userDateBase.getById(userID)
+     .then(results => {
+         if(results === undefined) {
+             res.status(400).json({message: 'invaild user id'})
+         } else {
+             req.user = results
+             next();
+         }
+        })
+    }
+              
 
-function validatePost(req, res, next) {}
+function validateUser(req, res, next) {
+    if (!Object.keys(req.body).length) {
+        res.status(400).json({message: 'missing user data'})
+    } else {
+        if (req.body.name) {
+            next()
+        } else {
+            res.status(400).json({message: 'missing name field'})
+        }
+    }
+}
+
+function validatePost(req, res, next) {
+    if (!Object.keys(req.body).length) {
+        res.status(400).json({message: 'missing user data'})
+} else {
+    if(req.body.text) {
+        next();
+    } else {
+        res.status(400).json({message: 'missing text field'})
+    }
+    }
+}
 
 module.exports = router;
