@@ -49,11 +49,37 @@ router.get("/:id", validateUserId, (req, res) => {
 
 
 
-router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", (req, res) => {
+    userDateBase.getUserPosts(req.user.id)
+    .then(results => {
+        res.status(201).json(results)
+    })
+    .catch(error => {
+        res.status(500).json(error)
+    })
+});
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validateUserId, (req, res) => {
+    userDateBase.remove(req.user.id)
+    .then(results => {
+        res.status(200).json(results)
+    })
+    .catch(error => {
+        res.status(500).json(results)
+    })
+});
 
-router.put("/:id", (req, res) => {});
+
+
+router.put("/:id", validateUserId, (req, res) => {
+userDateBase.update(req.user.id, req.body)
+.then(results => {
+    res.status(200).json(results)
+})
+.catch(error => {
+    res.status(500).json(error)
+})
+});
 
 //custom middleware
 
