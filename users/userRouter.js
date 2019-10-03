@@ -1,13 +1,16 @@
-const express = "express";
-const router = express.Router();
+const express = require("express");
 const userDateBase = require("./userDb.js");
-const postDateBase = require("./posts/postsDb")
-router.use(express.jon());
+const postDateBase = require("../posts/postDb")
+const router = express.Router();
 
-router.post("/", validatePost, (req, res) => {
-  const userObj = req.body;
-  userDateBase
-    .insert(userObj)
+
+
+
+router.post("/", validateUser, (req, res) => {
+ userDateBase.insert(req.body)
+ .then(({ id }) => {
+     userDateBase.getById(id)
+ })
     .then(results => {
       res.status(200).json(results);
     })
@@ -49,13 +52,14 @@ router.get("/:id", validateUserId, (req, res) => {
 
 
 
-router.get("/:id/posts", (req, res) => {
-    userDateBase.getUserPosts(req.user.id)
+router.get("/:id/posts", validateUserId, (req, res) => {
+    const {id} = req.params
+    userDateBase.getUserPosts(id)
     .then(results => {
         res.status(201).json(results)
     })
     .catch(error => {
-        res.status(500).json(error)
+        res.status(500).json({error: 'Server errror'})
     })
 });
 
@@ -71,7 +75,7 @@ router.delete("/:id", validateUserId, (req, res) => {
 
 
 
-router.put("/:id", validateUserId,ValidityUser, (req, res) => {
+router.put("/:id", validateUserId,validateUser, (req, res) => {
 userDateBase.update(req.user.id, req.body)
 .then(results => {
     res.status(200).json(results)

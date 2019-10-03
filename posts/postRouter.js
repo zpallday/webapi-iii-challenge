@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 const postDateBase = require('./postDb')
 const router = express.Router();
 
@@ -32,7 +32,7 @@ postDateBase.remove(req.post.id)
 })
 });
 
-router.put('/:id',validatePostId, validatePost, (req, res) => {
+router.put('/:id',validatePostId, validatePostId, (req, res) => {
 postDateBase.update(req.post.id, req.body)
 .then(results => {
     res.status(201).json(results)
